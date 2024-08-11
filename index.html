@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BMI Calculator</title>
+    <link rel="icon" href="logo.png" type="image/png" /> <!-- Favicon link -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('Designer.png') no-repeat center center;
+            background-size: 60%; /* Compress the image to 60% of its original size */
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-weight: 600;
+            color: #5B99C2; /* Text color */
+            margin-bottom: 20px;
+            animation: slideDown 1s ease-in-out;
+        }
+
+        p {
+            font-weight: 400;
+            margin: 10px 0;
+            color: #5B99C2; /* Text color */
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #5B99C2; /* Border color */
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4a78a3; /* Slightly darker border color on focus */
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #5B99C2; /* Button background color */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #4a78a3; /* Slightly darker button color on hover */
+            transform: translateY(-3px);
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #5B99C2; /* Text color */
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Highlight style for the correct BMI category */
+        .highlight {
+            font-weight: 600;
+            color: #5B99C2; /* Highlight color */
+        }
+
+        /* Gender radio buttons */
+        .gender {
+            margin: 10px 0;
+            color: #5B99C2; /* Text color */
+        }
+
+        .gender label {
+            margin-right: 20px;
+        }
+    </style>
+    <script>
+        window.onload = () => {
+            let button = document.querySelector("#btn");
+
+            // Function for calculating BMI
+            button.addEventListener("click", calculateBMI);
+        };
+
+        function calculateBMI() {
+
+            let height = parseInt(document.querySelector("#height").value);
+            let weight = parseInt(document.querySelector("#weight").value);
+            let result = document.querySelector("#result");
+
+            if (height === "" || isNaN(height)) {
+                result.innerHTML = "Provide a valid Height!";
+                return;
+            }
+
+            if (weight === "" || isNaN(weight)) {
+                result.innerHTML = "Provide a valid Weight!";
+                return;
+            }
+
+            let bmi = (weight / ((height * height) / 10000)).toFixed(2);
+
+            let output = `
+                <p>Underweight: BMI < 18.5</p>
+                <p>Normal weight: BMI 18.5 - 24.9</p>
+                <p>Overweight: BMI 25 - 29.9</p>
+                <p>Obese: BMI 30 or greater</p>
+            `;
+
+            if (bmi < 18.5) {
+                output = output.replace(
+                    'Underweight: BMI < 18.5',
+                    `<span class="highlight">Underweight: BMI < 18.5 (Your BMI: ${bmi})</span>`
+                );
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                output = output.replace(
+                    'Normal weight: BMI 18.5 - 24.9',
+                    `<span class="highlight">Normal weight: BMI 18.5 - 24.9 (Your BMI: ${bmi})</span>`
+                );
+            } else if (bmi >= 25 && bmi < 29.9) {
+                output = output.replace(
+                    'Overweight: BMI 25 - 29.9',
+                    `<span class="highlight">Overweight: BMI 25 - 29.9 (Your BMI: ${bmi})</span>`
+                );
+            } else {
+                output = output.replace(
+                    'Obese: BMI 30 or greater',
+                    `<span class="highlight">Obese: BMI 30 or greater (Your BMI: ${bmi})</span>`
+                );
+            }
+
+            result.innerHTML = output;
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>BMI Calculator</h1>
+        <p>Height (in cm)</p>
+        <input type="text" id="height" />
+        <p>Weight (in kg)</p>
+        <input type="text" id="weight" />
+        
+        <!-- Gender Selection -->
+        <div class="gender">
+            <p>Gender</p>
+            <label><input type="radio" name="gender" value="male" /> Male</label>
+            <label><input type="radio" name="gender" value="female" /> Female</label>
+        </div>
+
+        <button id="btn">Calculate</button>
+        <div id="result"></div>
+    </div>
+</body>
+</html>
